@@ -30,33 +30,33 @@ const byte ICtable[9]={
 };
 
 void writeCube(int tdelay){
-   static int currentLayer=0;
-   unsigned long startedAt = millis();
+    static int currentLayer=0;
+    unsigned long startedAt = millis();
     while(millis() - startedAt < tdelay){ 
-    
+
         delay(1);// wait a bit on previous layer
         digitalWrite(layersPins[currentLayer],LOW);//turn off current Layer
-        
+
         //change currentLayer
         if(currentLayer == 8)
             currentLayer=0;
         else
             currentLayer++;  
-        
+
         digitalWrite(pinOE, HIGH);//Output Enabled off
         //lines
         PORTB=ICtable[0];//set IC
         for(int ligne=0;ligne < 8; ligne++){
-          //write BUS for this leds'line
-	  for (int led=0;led <8;led++){
-	    digitalWrite(busPins[led], cube[currentLayer][ligne][led]); 
-	  }
-	  PORTB=ICtable[ligne +1]; //74HC574 is writen when clock pin goes LOW to HIGH. SO go to the next value for IC.
+            //write BUS for this leds'line
+            for (int led=0;led <8;led++){
+                digitalWrite(busPins[led], cube[currentLayer][ligne][led]); 
+            }
+            PORTB=ICtable[ligne +1]; //74HC574 is writen when clock pin goes LOW to HIGH. SO go to the next value for IC.
         }
         //OE ON
         digitalWrite(pinOE, LOW);
-	//layer on
-	digitalWrite(layersPins[currentLayer],HIGH);
+        //layer on
+        digitalWrite(layersPins[currentLayer],HIGH);
     }
 }
 void fillCube(){
