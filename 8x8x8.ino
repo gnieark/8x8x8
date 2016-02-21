@@ -29,27 +29,19 @@ const byte ICtable[9]={
  B00000000 //une façon de boucler sur 0
 };
 
-/*
-void selectIC(int outputPin){
-   
-    //for (int i=0; i<3; i++){
-    //    digitalWrite(ICPins[i], ICtable[outputPin][i]);
-    //}
-    
-    PORTB=ICtable[outputPin];
-}
-*/
 void writeCube(int tdelay){
    static int currentLayer=0;
    unsigned long startedAt = millis();
     while(millis() - startedAt < tdelay){ 
     
         delay(1);// wait a bit on previous layer
+        digitalWrite(layersPins[currentLayer],LOW);//turn off current Layer
         
-        //turn off all layers
-        for(int pin=0; pin<8; pin++){
-            digitalWrite(layersPins[pin],LOW);
-        }
+        //change currentLayer
+        if(currentLayer == 8)
+            currentLayer=0;
+        else
+            currentLayer++;  
         
         digitalWrite(pinOE, HIGH);//Output Enabled off
         //lines
@@ -59,19 +51,12 @@ void writeCube(int tdelay){
 	  for (int led=0;led <8;led++){
 	    digitalWrite(busPins[led], cube[currentLayer][ligne][led]); 
 	  }
-	  PORTB=ICtable[ligne +1]; //74HC574 is writed when clock pin goes LOW to HIGH. SO go to the next value for IC.
+	  PORTB=ICtable[ligne +1]; //74HC574 is writen when clock pin goes LOW to HIGH. SO go to the next value for IC.
         }
-        
         //OE ON
         digitalWrite(pinOE, LOW);
 	//layer on
 	digitalWrite(layersPins[currentLayer],HIGH);
-        
-        //change currentLayer
-        if(currentLayer == 8)
-            currentLayer=0;
-        else
-            currentLayer++;        
     }
 }
 void fillCube(){
@@ -107,17 +92,6 @@ void setup(){
 }
 
 void loop(){
-/*    
- for (int i=0;i<8;i++){
-  for(int j=0;j<8;j++){
-   for(int k=0;k<8;k++){
-       cube[i][j][k]=HIGH;
-       writeCube(100);
-       cube[i][j][k]=LOW;
-   }
-  }
- }
-*/
     //remplir tout le layer haut
     for(int i=0;i<8;i++){
         for(int j=0;j<8;j++){
@@ -148,7 +122,4 @@ void loop(){
             
         }
     }
-    
-    
-
 }
