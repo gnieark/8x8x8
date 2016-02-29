@@ -1,0 +1,3 @@
+[submodule "Analog-joysticks"]
+	path = Analog-joysticks
+	url = git@github.com:gnieark/Analog-joysticks.git
